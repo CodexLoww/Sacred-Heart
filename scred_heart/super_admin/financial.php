@@ -319,7 +319,7 @@ require_once "modal/updatePassModal.php";
                                                                 label += ': ';
                                                             }
                                                             if (context.parsed) {
-                                                                label += context.parsed.toLocaleString();
+                                                                label += context.parsed.toLocaleString() + ' (' + ((context.parsed / context.dataset.data.reduce((a, b) => a + b, 0)) * 100).toFixed(2) + '%)';
                                                             }
                                                             return label;
                                                         }
