@@ -21,4 +21,5 @@
 	<script type="text/javascript" src="../js/sweetalert2.all.min.js"></script>
 	<script type="text/javascript" src="../js/aos.js"></script>
 	<script type="text/javascript" src="../js/aos-init.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
