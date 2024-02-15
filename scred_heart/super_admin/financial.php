@@ -2,6 +2,8 @@
 require_once "../inc/sessions.php";
 require_once "../inc/functions.php";
 
+// Check if the user is a super admin, otherwise, redirect to logout
+$_SESSION["account_type"] == "super admin" ?: header("location: ../logout");
 
 // Check if the form is submitted
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["transactionDate"])) {
@@ -26,8 +28,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["transactionDate"])) {
     }
 }
 
-
-
 // Create the table if it doesn't exist
 $createTableQuery = "CREATE TABLE IF NOT EXISTS tbl_finance (
                         id INT AUTO_INCREMENT PRIMARY KEY,
@@ -36,25 +36,95 @@ $createTableQuery = "CREATE TABLE IF NOT EXISTS tbl_finance (
                         amount DECIMAL(10, 2) NOT NULL,
                         description VARCHAR(255) NOT NULL,
                         inputted_by VARCHAR(255) NOT NULL
-                        
                     )"; // new amount column added to the table
 
 $conn->query($createTableQuery);
 
 // Fetch data for the table
 $tbl_finance_query = $conn->query("SELECT * FROM tbl_finance");
-// ternary operator
-// check if account type are equal to the user
-$_SESSION["account_type"] == "super admin" ? /* true condition */ : header("location: ../logout");
 
+// Fetch data for the chart (overall monthly)
+$chartDataQuery = "SELECT MONTH(transaction_date) AS month, SUM(amount) AS total_amount
+                   FROM tbl_finance
+                   GROUP BY MONTH(transaction_date)";
+$chartDataResult = $conn->query($chartDataQuery);
 
+// Organize data for the chart
+$labels = [];
+$totalAmounts = [];
+
+// Initialize labels for all twelve months
+for ($i = 1; $i <= 12; $i++) {
+    $monthName = date("M", mktime(0, 0, 0, $i, 1)); 
+    $labels[] = $monthName;
+    $totalAmounts[] = 0; // Set total amount to 0 initially
+}
+
+// Loop through the result set and populate the total amounts for available months
+while ($row = $chartDataResult->fetch_assoc()) {
+    $monthIndex = $row['month'] - 1; // Month index starts from 0
+    $totalAmount = $row['total_amount'];
+
+    // Store total amounts in the respective month index
+    $totalAmounts[$monthIndex] = $totalAmount;
+}
+
+// Fetch data for each transaction type separately
+$transactionTypes = ['donation', 'expenses', 'wedding', 'baptismal'];
+
+// Initialize arrays to store data for each transaction type
+$typeLabels = [];
+$typeTotalAmounts = [];
+$typeColors = ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0']; // Colors for legend
+
+foreach ($transactionTypes as $type) {
+    // Fetch data for the current transaction type
+    $typeDataQuery = "SELECT MONTH(transaction_date) AS month, SUM(amount) AS total_amount
+                      FROM tbl_finance
+                      WHERE transaction_type = '$type'
+                      GROUP BY MONTH(transaction_date)";
+    $typeDataResult = $conn->query($typeDataQuery);
+
+    // Loop through the result set and populate the arrays for the current transaction type
+    $typeLabels[$type] = [];
+    $typeTotalAmounts[$type] = [];
+
+    // Initialize labels for all twelve months for the current transaction type
+    for ($i = 1; $i <= 12; $i++) {
+        $monthName = date("F", mktime(0, 0, 0, $i, 1));
+        $typeLabels[$type][] = $monthName;
+        $typeTotalAmounts[$type][] = 0; // Set total amount to 0 initially
+    }
+
+    // Populate the total amounts for the current transaction type
+    while ($row = $typeDataResult->fetch_assoc()) {
+        $monthIndex = $row['month'] - 1; // Month index starts from 0
+        $totalAmount = $row['total_amount'];
+
+        // Store total amounts in the respective month index
+        $typeTotalAmounts[$type][$monthIndex] = $totalAmount;
+    }
+}
+// Organize data for the pie chart
+$pieLabels = [];
+$pieTotalAmounts = [];
+
+// Loop through each transaction type
+foreach ($transactionTypes as $type) {
+    // Calculate the total amount for the current transaction type
+    $totalAmount = array_sum($typeTotalAmounts[$type]);
+
+    // Add the transaction type and its total amount to the pie chart data
+    $pieLabels[] = $type;
+    $pieTotalAmounts[] = $totalAmount;
+}
 
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
 <?php require_once "template-parts/head.php"; ?>
-
 
 <body>
 
@@ -63,19 +133,19 @@ require_once "template-parts/navLogin.php";
 require_once "modal/updatePassModal.php"; 
 ?>
 <style>
-.backgroundimg{
-                background-image: url(../img/img/about.png);
-                background-size: cover;
-                background-repeat: no-repeat;
-                width: 100%;
-                height: 110vh;
-                position: absolute;
-                top:0;
-                z-index: -1;
-            }
+    .backgroundimg{
+        background-image: url(../img/img/about.png);
+        background-size: cover;
+        background-repeat: no-repeat;
+        width: 100%;
+        height: 110vh;
+        position: absolute;
+        top:0;
+        z-index: -1;
+    }
 </style>
 <div class="backgroundimg"> </div>
-<!-- Add this modal markup after the existing code -->
+
 <div class="modal fade" id="modalfinance" tabindex="-1" role="dialog" aria-labelledby="modalfinanceLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -152,82 +222,124 @@ require_once "modal/updatePassModal.php";
                                 <?php 
                                 $ctr = 1;
                                 while ($row = $tbl_finance_query->fetch_assoc()) {
-                                ?>
-                                <tbody>
-                                    <tr class="text-center">
-                                        <td><?= $ctr; ?></td>
-                                        <td><?= $row["transaction_date"]; ?></td>
-                                        <td><?= $row["transaction_type"]; ?></td>
-                                        <td><?= isset($row["amount"]) ? $row["amount"] : ''; ?></td>
-                                        <td><?= $row["description"]; ?></td>
-                                        <td><?= $row["inputted_by"]; ?></td>
-                                     
-                                    </tr>
-                                    <?php	
-                                    $ctr++;	
-                                  }
-                                  ?>
-                                </tbody>
-                            </table>
-                            <section class="mt-5 mb-5">
-                                <div class="container">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="d-flex justify-content-between align-items-center mb-4">
-                                                <h3 class="overflow-hidden text-primary text-uppercase fw-bolder">Revenue Overview</h3>
+                                    ?>
+                                    <tbody>
+                                        <tr class="text-center">
+                                            <td><?= $ctr; ?></td>
+                                            <td><?= $row["transaction_date"]; ?></td>
+                                            <td><?= $row["transaction_type"]; ?></td>
+                                            <td><?= isset($row["amount"]) ? $row["amount"] : ''; ?></td>
+                                            <td><?= $row["description"]; ?></td>
+                                            <td><?= $row["inputted_by"]; ?></td>
+                                         
+                                        </tr>
+                                        <?php	
+                                        $ctr++;	
+                                      }
+                                      ?>
+                                    </tbody>
+                                </table>
+                                <section class="mt-5 mb-5">
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="col-md-12 mt-5 text-center">
+                                                <h3 class="overflow-hidden text-primary text-uppercase fw-bolder">Financial</h3>
                                             </div>
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <canvas id="revenueChart"></canvas>
+                                        </div>
+                                        <div class="row mt-4">
+                                            <div class="col-md-6">
+                                                <canvas id="revenueChart"></canvas>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <canvas id="transactionTypeChart"></canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </section>
+
+                                <?php require_once "template-parts/bottom.php"; ?>
+                                <!-- <section class="mt-5 mb-5">
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="d-flex justify-content-between align-items-center mb-4">
+                                                    <h3 class="overflow-hidden text-primary text-uppercase fw-bolder">Revenue Overview</h3>
                                                 </div>
-                                                <div class="col-md-6">
-                                                    <table class="table table-hover border border-1 border-dark">
-                                                    <div class="chart-container">
-                                                        <div class="chart-header">
-                                                            <div class="chart-title">TOTAL AMOUNT BY EVENT CATEGORY</div>
-                                                        </div>
-                                                        <canvas id="eventCategoryChart"></canvas>
-                                                        </div>
-                                                    </table>
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <canvas id="revenueChart"></canvas>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            </section>
-                            <script>
-                                const ctx = document.getElementById('revenueChart').getContext('2d');
-                                const revenueChart = new Chart(ctx, {
-                                    type: 'bar',
-                                    data: {
-                                        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-                                        datasets: [{
-                                            label: 'Revenue',
-                                            data: [12000, 15000, 18000, 21000, 24000, 27000, 30000, 33000, 36000, 40000, 45000, 50000],
-                                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                                            borderColor: 'rgba(75, 192, 192, 1)',
-                                            borderWidth: 1
-                                        }]
-                                    },
-                                    options: {
-                                        scales: {
-                                            y: {
-                                                beginAtZero: true
+                                </section> -->
+                                <script>
+                                    const ctx1 = document.getElementById('revenueChart').getContext('2d');
+                                    const revenueChart = new Chart(ctx1, {
+                                        type: 'bar',
+                                        data: {
+                                            labels: <?php echo json_encode($labels); ?>,
+                                            datasets: [{
+                                                label: 'Total Revenue',
+                                                data: <?php echo json_encode($totalAmounts); ?>,
+                                                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                                                borderColor: 'rgba(75, 192, 192, 1)',
+                                                borderWidth: 1
+                                            }]
+                                        },
+                                        options: {
+                                            scales: {
+                                                y: {
+                                                    beginAtZero: true
+                                                }
                                             }
                                         }
-                                    }
-                                });
-                            </script>
+                                    });
+
+                                    const ctx2 = document.getElementById('transactionTypeChart').getContext('2d');
+                                    const transactionTypeChart = new Chart(ctx2, {
+                                        type: 'pie',
+                                        data: {
+                                            labels: <?php echo json_encode($pieLabels); ?>,
+                                            datasets: [{
+                                                label: 'Transaction Type',
+                                                data: <?php echo json_encode($pieTotalAmounts); ?>,
+                                                backgroundColor: <?php echo json_encode($typeColors); ?>,
+                                                borderWidth: 1
+                                            }]
+                                        },
+                                        options: {
+                                            plugins: {
+                                                tooltip: {
+                                                    callbacks: {
+                                                        label: function(context) {
+                                                            var label = context.label || '';
+                                                            if (label) {
+                                                                label += ': ';
+                                                            }
+                                                            if (context.parsed) {
+                                                                label += context.parsed.toLocaleString();
+                                                            }
+                                                            return label;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        },
+                                    });
+                                </script>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</section>
-
-<?php
-require_once "template-parts/bottom.php"; 
-?>
-</body>
-</html>
+    </section>
+    
+    <?php
+    require_once "template-parts/bottom.php"; 
+    ?>
+    </body>
+    </html>
+    
