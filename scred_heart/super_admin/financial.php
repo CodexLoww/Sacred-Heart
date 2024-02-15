@@ -70,7 +70,7 @@ while ($row = $chartDataResult->fetch_assoc()) {
 }
 
 // Fetch data for each transaction type separately
-$transactionTypes = ['donation', 'expenses', 'wedding', 'baptismal'];
+$transactionTypes = ['donation', 'expenses', 'wedding_payment', 'baptismal'];
 
 // Initialize arrays to store data for each transaction type
 $typeLabels = [];
@@ -243,7 +243,7 @@ require_once "modal/updatePassModal.php";
                                     <div class="container">
                                         <div class="row">
                                             <div class="col-md-12 mt-5 text-center">
-                                                <h3 class="overflow-hidden text-primary text-uppercase fw-bolder">Financial</h3>
+                                                <h3 class="overflow-hidden text-primary text-uppercase fw-bolder">Overview</h3>
                                             </div>
                                         </div>
                                         <div class="row mt-4">
