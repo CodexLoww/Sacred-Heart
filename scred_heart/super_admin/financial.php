@@ -41,7 +41,7 @@ $createTableQuery = "CREATE TABLE IF NOT EXISTS tbl_finance (
 $conn->query($createTableQuery);
 
 // Fetch data for the table
-$tbl_finance_query = $conn->query("SELECT * FROM tbl_finance");
+$tbl_finance_query = $conn->query("SELECT * FROM tbl_finance ORDER BY id DESC, transaction_date DESC"); // prioritize the latest transaction
 
 // Fetch data for the chart (overall monthly)
 $chartDataQuery = "SELECT MONTH(transaction_date) AS month, SUM(amount) AS total_amount
@@ -75,7 +75,13 @@ $transactionTypes = ['donation', 'expenses', 'wedding_payment', 'baptismal'];
 // Initialize arrays to store data for each transaction type
 $typeLabels = [];
 $typeTotalAmounts = [];
-$typeColors = ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0']; // Colors for legend
+$typeColors = [
+    'rgba(153, 102, 255, 0.8)', // Purple with transparency
+    'rgba(54, 162, 235, 0.8)', // Blue with transparency
+    'rgba(255, 206, 86, 0.8)', // Yellow with transparency
+    'rgba(75, 192, 192, 0.8)', // Teal with transparency
+];
+ // Colors for legend
 
 foreach ($transactionTypes as $type) {
     // Fetch data for the current transaction type
@@ -245,12 +251,13 @@ require_once "modal/updatePassModal.php";
                                     </tr>
                                 </thead>
                                 <?php 
-                                $ctr = 1;
+                                // $ctr = 1;
                                 while ($row = $tbl_finance_query->fetch_assoc()) {
                                     ?>
                                     <tbody>
                                         <tr class="text-center">
-                                            <td><?= $ctr; ?></td>
+                                            <!-- <td><?= $ctr; ?></td> -->
+                                            <td><?= $row["id"]; ?></td>
                                             <td><?= $row["transaction_date"]; ?></td>
                                             <td><?= $row["transaction_type"]; ?></td>
                                             <td><?= isset($row["amount"]) ? $row["amount"] : ''; ?></td>
@@ -259,7 +266,7 @@ require_once "modal/updatePassModal.php";
                                          
                                         </tr>
                                         <?php	
-                                        $ctr++;	
+                                        // $ctr++;	
                                       }
                                       ?>
                                     </tbody>
@@ -291,8 +298,8 @@ require_once "modal/updatePassModal.php";
                                             datasets: [{
                                                 label: 'Total Revenue',
                                                 data: <?php echo json_encode($totalAmounts); ?>,
-                                                backgroundColor: 'rgba(75, 192, 192, 0.2)', // kulay ng chart
-                                                borderColor: 'rgba(75, 192, 192, 1)', // kulay ng chart
+                                                backgroundColor: 'rgba(255, 99, 132, 0.6)', // Light pink with transparency
+                                                borderColor: 'rgb(255, 99, 132)', // Bright pink
                                                 borderWidth: 1
                                             }]
                                         },
