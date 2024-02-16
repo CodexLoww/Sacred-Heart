@@ -362,7 +362,6 @@ require_once "modal/updatePassModal.php";
                                             maintainAspectRatio: false,
                                         },
                                     });
-
                                 </script>
                             </div>
                         </div>
