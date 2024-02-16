@@ -55,7 +55,7 @@ $totalAmounts = [];
 
 // Initialize labels for all twelve months
 for ($i = 1; $i <= 12; $i++) {
-    $monthName = date("F", mktime(0, 0, 0, $i, 1));
+    $monthName = date("M", mktime(0, 0, 0, $i, 1)); 
     $labels[] = $monthName;
     $totalAmounts[] = 0; // Set total amount to 0 initially
 }
@@ -105,7 +105,6 @@ foreach ($transactionTypes as $type) {
         $typeTotalAmounts[$type][$monthIndex] = $totalAmount;
     }
 }
-
 // Organize data for the pie chart
 $pieLabels = [];
 $pieTotalAmounts = [];
@@ -119,6 +118,7 @@ foreach ($transactionTypes as $type) {
     $pieLabels[] = $type;
     $pieTotalAmounts[] = $totalAmount;
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -189,7 +189,27 @@ require_once "modal/updatePassModal.php";
   </div>
 </div>
 
-<section class="mt-5 mb-5">
+ <!-- Overview? -->
+ <section class="mt-5 mb-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 mt-5 text-center">
+                <h3 class="overflow-hidden text-primary text-uppercase fw-bolder">Overview</h3>
+            </div>
+        </div>
+            <div class="row mt-4">
+                <div class="col-md-6">
+                    <canvas id="revenueChart"></canvas>
+                </div>
+            <div class="col-md-6">
+                <canvas id="transactionTypeChart"></canvas>
+            </div>
+        </div>
+    </div>
+</section>                               
+
+<!-- Financial Table -->
+<section class="mt-5 mb-5"> 
     <div class="container">
         <div class="row">
             <div class="col-md-12 mt-5 text-center">
@@ -197,64 +217,142 @@ require_once "modal/updatePassModal.php";
             </div>
         </div>
         <div class="row mt-4">
-            <div class="col-md-6">
-                <canvas id="revenueChart"></canvas>
-            </div>
-            <div class="col-md-6">
-                <canvas id="transactionTypeChart"></canvas>
+            <div class="col-md-12">
+                <div class="table-responsive">
+                    <div class="container-fluid">
+                        <div class="row mb-md-3 mb-2">
+                            <div class="col-md-12">
+                                <a href="#" class="btn btn-outline-danger" type="button" data-bs-toggle="modal" data-bs-target="#modalfinance">
+                                    <i class="fa-solid fa-plus"></i> New
+                                </a>
+                            </div> <!-- end of col -->
+                        </div>
+                        <div id="showData">
+                            <table class="table table-hover border border-1 border-dark">
+                                <thead>
+                                    <tr class="text-center">
+                                        <th>No.</th>
+                                        <th>Date</th>
+                                        <th>Type of transaction</th>
+                                        <th>Amount</th>
+                                        <th>Description</th>
+                                        <th>Inputted by:</th>
+                                    </tr>
+                                </thead>
+                                <?php 
+                                $ctr = 1;
+                                while ($row = $tbl_finance_query->fetch_assoc()) {
+                                    ?>
+                                    <tbody>
+                                        <tr class="text-center">
+                                            <td><?= $ctr; ?></td>
+                                            <td><?= $row["transaction_date"]; ?></td>
+                                            <td><?= $row["transaction_type"]; ?></td>
+                                            <td><?= isset($row["amount"]) ? $row["amount"] : ''; ?></td>
+                                            <td><?= $row["description"]; ?></td>
+                                            <td><?= $row["inputted_by"]; ?></td>
+                                         
+                                        </tr>
+                                        <?php	
+                                        $ctr++;	
+                                      }
+                                      ?>
+                                    </tbody>
+                                </table>
+
+                                <?php require_once "template-parts/bottom.php"; ?>
+                                <!-- <section class="mt-5 mb-5">
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="d-flex justify-content-between align-items-center mb-4">
+                                                    <h3 class="overflow-hidden text-primary text-uppercase fw-bolder">Revenue Overview</h3>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <canvas id="revenueChart"></canvas>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </section> -->
+                                <script>
+                                    const ctx1 = document.getElementById('revenueChart').getContext('2d');
+                                    const revenueChart = new Chart(ctx1, {
+                                        type: 'bar',
+                                        data: {
+                                            labels: <?php echo json_encode($labels); ?>,
+                                            datasets: [{
+                                                label: 'Total Revenue',
+                                                data: <?php echo json_encode($totalAmounts); ?>,
+                                                backgroundColor: 'rgba(75, 192, 192, 0.2)', // kulay ng chart
+                                                borderColor: 'rgba(75, 192, 192, 1)', // kulay ng chart
+                                                borderWidth: 1
+                                            }]
+                                        },
+                                        options: {
+                                            scales: {
+                                                y: {
+                                                    beginAtZero: true
+                                                }
+                                            }
+                                        }
+                                    });
+
+                                    const ctx2 = document.getElementById('transactionTypeChart').getContext('2d');
+                                    const transactionTypeChart = new Chart(ctx2, {
+                                        type: 'pie',
+                                        data: {
+                                            labels: <?php echo json_encode($pieLabels); ?>,
+                                            datasets: [{
+                                                label: 'Transaction Type',
+                                                data: <?php echo json_encode($pieTotalAmounts); ?>,
+                                                backgroundColor: <?php echo json_encode($typeColors); ?>,
+                                                borderWidth: 1
+                                            }]
+                                        },
+                                        options: {
+                                            plugins: {
+                                                tooltip: {
+                                                    callbacks: {
+                                                        label: function(context) {
+                                                            var label = context.label || '';
+                                                            if (label) {
+                                                                label += ': ';
+                                                            }
+                                                            if (context.parsed) {
+                                                                label += context.parsed.toLocaleString() + ' (' + ((context.parsed / context.dataset.data.reduce((a, b) => a + b, 0)) * 100).toFixed(2) + '%)';
+                                                            }
+                                                            return label;
+                                                        }
+                                                    }
+                                                }
+                                            },
+                                            layout: {
+                                                padding: {
+                                                    left: 10,
+                                                    right: 10,
+                                                    top: 10,
+                                                    bottom: 10
+                                                }
+                                            },
+                                            responsive: true,
+                                            maintainAspectRatio: false,
+                                        },
+                                    });
+                                </script>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-</section>
-
-<?php require_once "template-parts/bottom.php"; ?>
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-    const ctx1 = document.getElementById('revenueChart').getContext('2d');
-    const revenueChart = new Chart(ctx1, {
-        type: 'bar',
-        data: {
-            labels: <?php echo json_encode($labels); ?>,
-            datasets: [{
-                label: 'Total Revenue',
-                data: <?php echo json_encode($totalAmounts); ?>,
-                backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                borderColor: 'rgba(75, 192, 192, 1)',
-                borderWidth: 1
-            }]
-        },
-        options: {
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            }
-        }
-    });
-
-    const ctx2 = document.getElementById('transactionTypeChart').getContext('2d');
-    const transactionTypeChart = new Chart(ctx2, {
-        type: 'pie',
-        data: {
-            labels: <?php echo json_encode($pieLabels); ?>,
-            datasets: [{
-                label: 'Transaction Type',
-                data: <?php echo json_encode($pieTotalAmounts); ?>,
-                backgroundColor: <?php echo json_encode($typeColors); ?>,
-                borderWidth: 1
-            }]
-        },
-        options: {
-            plugins: {
-                legend: {
-                    display: true,
-                    position: 'right'
-                }
-            }
-        }
-    });
-</script>
-
-</body>
-</html>
+    </section>
+    
+    <?php
+    require_once "template-parts/bottom.php"; 
+    ?>
+    </body>
+    </html>
+    

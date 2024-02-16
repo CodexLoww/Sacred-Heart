@@ -22,4 +22,6 @@
 	<script type="text/javascript" src="../js/aos.js"></script>
 	<script type="text/javascript" src="../js/aos-init.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+
 </head>

@@ -189,7 +189,27 @@ require_once "modal/updatePassModal.php";
   </div>
 </div>
 
-<section class="mt-5 mb-5">
+ <!-- Overview? -->
+ <section class="mt-5 mb-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 mt-5 text-center">
+                <h3 class="overflow-hidden text-primary text-uppercase fw-bolder">Overview</h3>
+            </div>
+        </div>
+            <div class="row mt-4">
+                <div class="col-md-6">
+                    <canvas id="revenueChart"></canvas>
+                </div>
+            <div class="col-md-6">
+                <canvas id="transactionTypeChart"></canvas>
+            </div>
+        </div>
+    </div>
+</section>                               
+
+<!-- Financial Table -->
+<section class="mt-5 mb-5"> 
     <div class="container">
         <div class="row">
             <div class="col-md-12 mt-5 text-center">
@@ -239,23 +259,6 @@ require_once "modal/updatePassModal.php";
                                       ?>
                                     </tbody>
                                 </table>
-                                <section class="mt-5 mb-5">
-                                    <div class="container">
-                                        <div class="row">
-                                            <div class="col-md-12 mt-5 text-center">
-                                                <h3 class="overflow-hidden text-primary text-uppercase fw-bolder">Overview</h3>
-                                            </div>
-                                        </div>
-                                        <div class="row mt-4">
-                                            <div class="col-md-6">
-                                                <canvas id="revenueChart"></canvas>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <canvas id="transactionTypeChart"></canvas>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </section>
 
                                 <?php require_once "template-parts/bottom.php"; ?>
                                 <!-- <section class="mt-5 mb-5">
@@ -283,8 +286,8 @@ require_once "modal/updatePassModal.php";
                                             datasets: [{
                                                 label: 'Total Revenue',
                                                 data: <?php echo json_encode($totalAmounts); ?>,
-                                                backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                                                borderColor: 'rgba(75, 192, 192, 1)',
+                                                backgroundColor: 'rgba(75, 192, 192, 0.2)', // kulay ng chart
+                                                borderColor: 'rgba(75, 192, 192, 1)', // kulay ng chart
                                                 borderWidth: 1
                                             }]
                                         },
@@ -299,35 +302,54 @@ require_once "modal/updatePassModal.php";
 
                                     const ctx2 = document.getElementById('transactionTypeChart').getContext('2d');
                                     const transactionTypeChart = new Chart(ctx2, {
-                                        type: 'pie',
-                                        data: {
-                                            labels: <?php echo json_encode($pieLabels); ?>,
-                                            datasets: [{
-                                                label: 'Transaction Type',
-                                                data: <?php echo json_encode($pieTotalAmounts); ?>,
-                                                backgroundColor: <?php echo json_encode($typeColors); ?>,
-                                                borderWidth: 1
-                                            }]
-                                        },
-                                        options: {
-                                            plugins: {
-                                                tooltip: {
-                                                    callbacks: {
-                                                        label: function(context) {
-                                                            var label = context.label || '';
-                                                            if (label) {
-                                                                label += ': ';
-                                                            }
-                                                            if (context.parsed) {
-                                                                label += context.parsed.toLocaleString() + ' (' + ((context.parsed / context.dataset.data.reduce((a, b) => a + b, 0)) * 100).toFixed(2) + '%)';
-                                                            }
-                                                            return label;
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        },
-                                    });
+    type: 'pie',
+    data: {
+        labels: <?php echo json_encode($pieLabels); ?>,
+        datasets: [{
+            label: 'Transaction Type',
+            data: <?php echo json_encode($pieTotalAmounts); ?>,
+            backgroundColor: <?php echo json_encode($typeColors); ?>,
+            borderWidth: 1
+        }]
+    },
+    options: {
+        plugins: {
+            tooltip: {
+                enabled: true, // Enable tooltip
+                callbacks: {
+                    label: function(context) {
+                        let label = context.label || '';
+                        if (label) {
+                            label += ': ';
+                        }
+                        if (context.parsed) {
+                            label += context.parsed.toLocaleString() + ' (' + ((context.parsed / context.dataset.data.reduce((a, b) => a + b, 0)) * 100).toFixed(2) + '%)';
+                        }
+                        return label;
+                    }
+                }
+            },
+            legend: {
+                display: true, // Display legend
+                position: 'right' // Position legend to the right
+            },
+            datalabels: {
+                display: false // Hide data labels by default
+            }
+        },
+        layout: {
+            padding: {
+                left: 10,
+                right: 10,
+                top: 10,
+                bottom: 10
+            }
+        },
+        responsive: true,
+        maintainAspectRatio: false,
+    },
+});
+
                                 </script>
                             </div>
                         </div>
