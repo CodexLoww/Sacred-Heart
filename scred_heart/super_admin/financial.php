@@ -104,6 +104,11 @@ foreach ($transactionTypes as $type) {
         // Store total amounts in the respective month index
         $typeTotalAmounts[$type][$monthIndex] = $totalAmount;
     }
+    // Preprocess the labels to replace "wedding_payment" with "wedding"
+    $typeLabels[$type] = array_map(function($label) {
+        return $label === 'wedding_payment' ? 'wedding' : $label;
+    }, $typeLabels[$type]);
+
 }
 // Organize data for the pie chart
 $pieLabels = [];
@@ -115,7 +120,7 @@ foreach ($transactionTypes as $type) {
     $totalAmount = array_sum($typeTotalAmounts[$type]);
 
     // Add the transaction type and its total amount to the pie chart data
-    $pieLabels[] = $type;
+    $pieLabels[] = $type === 'wedding_payment' ? 'wedding' : $type;
     $pieTotalAmounts[] = $totalAmount;
 }
 
@@ -299,56 +304,57 @@ require_once "modal/updatePassModal.php";
                                             }
                                         }
                                     });
-
+                                    
+                                    
                                     const ctx2 = document.getElementById('transactionTypeChart').getContext('2d');
                                     const transactionTypeChart = new Chart(ctx2, {
-    type: 'pie',
-    data: {
-        labels: <?php echo json_encode($pieLabels); ?>,
-        datasets: [{
-            label: 'Transaction Type',
-            data: <?php echo json_encode($pieTotalAmounts); ?>,
-            backgroundColor: <?php echo json_encode($typeColors); ?>,
-            borderWidth: 1
-        }]
-    },
-    options: {
-        plugins: {
-            tooltip: {
-                enabled: true, // Enable tooltip
-                callbacks: {
-                    label: function(context) {
-                        let label = context.label || '';
-                        if (label) {
-                            label += ': ';
-                        }
-                        if (context.parsed) {
-                            label += context.parsed.toLocaleString() + ' (' + ((context.parsed / context.dataset.data.reduce((a, b) => a + b, 0)) * 100).toFixed(2) + '%)';
-                        }
-                        return label;
-                    }
-                }
-            },
-            legend: {
-                display: true, // Display legend
-                position: 'right' // Position legend to the right
-            },
-            datalabels: {
-                display: false // Hide data labels by default
-            }
-        },
-        layout: {
-            padding: {
-                left: 10,
-                right: 10,
-                top: 10,
-                bottom: 10
-            }
-        },
-        responsive: true,
-        maintainAspectRatio: false,
-    },
-});
+                                        type: 'pie',
+                                        data: {
+                                            labels: <?php echo json_encode($pieLabels); ?>,
+                                            datasets: [{
+                                                label: 'Transaction Type',
+                                                data: <?php echo json_encode($pieTotalAmounts); ?>,
+                                                backgroundColor: <?php echo json_encode($typeColors); ?>,
+                                                borderWidth: 1
+                                            }]
+                                        },
+                                        options: {
+                                            plugins: {
+                                                tooltip: {
+                                                    enabled: true, // Enable tooltip
+                                                    callbacks: {
+                                                        label: function(context) {
+                                                            let label = context.label || '';
+                                                            if (label) {
+                                                                label += ': ';
+                                                            }
+                                                            if (context.parsed) {
+                                                                label += context.parsed.toLocaleString() + ' (' + ((context.parsed / context.dataset.data.reduce((a, b) => a + b, 0)) * 100).toFixed(2) + '%)';
+                                                            }
+                                                            return label;
+                                                        }
+                                                    }
+                                                },
+                                                legend: {
+                                                    display: true, // Display legend
+                                                    position: 'right' // Position legend to the right
+                                                },
+                                                datalabels: {
+                                                    display: false // Hide data labels by default
+                                                }
+                                            },
+                                            layout: {
+                                                padding: {
+                                                    left: 10,
+                                                    right: 10,
+                                                    top: 10,
+                                                    bottom: 10
+                                                }
+                                            },
+                                            responsive: true,
+                                            maintainAspectRatio: false,
+                                        },
+                                    });
 
                                 </script>
                             </div>
