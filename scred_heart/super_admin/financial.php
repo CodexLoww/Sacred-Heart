@@ -259,11 +259,10 @@ require_once "modal/updatePassModal.php";
                                             <!-- <td><?= $ctr; ?></td> -->
                                             <td><?= $row["id"]; ?></td>
                                             <td><?= $row["transaction_date"]; ?></td>
-                                            <td><?= $row["transaction_type"]; ?></td>
+                                            <td><?= $row["transaction_type"] === 'wedding_payment' ? 'wedding' : $row["transaction_type"]; ?></td> 
                                             <td><?= isset($row["amount"]) ? $row["amount"] : ''; ?></td>
                                             <td><?= $row["description"]; ?></td>
                                             <td><?= $row["inputted_by"]; ?></td>
-                                         
                                         </tr>
                                         <?php	
                                         // $ctr++;	
