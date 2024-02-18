@@ -149,7 +149,7 @@ require_once "modal/updatePassModal.php";
         background-size: cover;
         background-repeat: no-repeat;
         width: 100%;
-        height: 110vh;
+        height: 190vh;
         position: absolute;
         top:0;
         z-index: -1;
