@@ -278,15 +278,15 @@ require_once "inc/functions.php";
 			<div class="field-row" >
 				<label for="lastname-label">
 					Last Name
-					<input type="text" id="signLast" pattern="[A-Za-z ]+" title="Please enter letters only." name="lname" class="form-control" required="" placeholder="Enter Last Name">
+					<input type="text" id="signLast" title="Please enter letters only." name="lname" class="form-control" required="" placeholder="Enter Last Name">
 				</label>
 				<label for="firstname-label">
 					First Name
-					<input type="text" id="signFirst" pattern="[A-Za-z ]+" title="Please enter letters only." name="fname" class="form-control" required="" placeholder="Enter First Name">
+					<input type="text" id="signFirst" title="Please enter letters only." name="fname" class="form-control" required="" placeholder="Enter First Name">
 				</label>
 				<label for="middlename-label">
 					Middle Name
-					<input type="text" id="signMiddle" pattern="[A-Za-z ]+" title="Please enter letters only." name="mname" class="form-control" placeholder="Enter Middle Name">
+					<input type="text" id="signMiddle" title="Please enter letters only." name="mname" class="form-control" placeholder="Enter Middle Name">
 				</label>
 				<label for="contact-label">
 					Contact Number
@@ -344,7 +344,7 @@ require_once "inc/functions.php";
 						</form>
 					</div>
 					<div class="pop-buttons">
-						<button id="sendEmailBtn" type="submit" name="btnReg" style="background-color:grey;" disabled>Submit</button><br/>
+						<button id="sendEmailBtn" type="submit" name="btnReg" disabled>Submit</button><br/>
 						<a href="login.php"><button style="color: #7066e0; background-color: transparent; font-weight: bold;"> Cancel</button></a>
 					</div>
 					</div>
