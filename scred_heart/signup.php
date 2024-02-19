@@ -419,7 +419,7 @@ require_once "inc/functions.php";
 
 
 		(function() {
-            emailjs.init("Ywhy9BCmctNShAFm8");
+            emailjs.init("eIbAcbGvszDpkn7IG"); //APIKey Change
     
             document.getElementById("registerButton").addEventListener("click", function() {
 
@@ -427,7 +427,7 @@ require_once "inc/functions.php";
 				var user = document.getElementById("signUser").value;
                 var otp_number = document.getElementById("OTP").value;
 
-                emailjs.send("service_gil3a4k","template_3344jzx", {
+                emailjs.send("service_czx06ma","template_6q78qtv", { //Service and  Template Changes
 					from_name: "Sacred Heart of Jesus Catholic Church",
 					username: user,	
                     to_email: inputed_email,
