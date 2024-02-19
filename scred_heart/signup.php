@@ -336,15 +336,13 @@ require_once "inc/functions.php";
 					<p>You will need to verify your email to complete registration</p>
 					<p>Check you Email account for verification Code</p>
 					<div class="image">
-						<form action="">
 							<div class="otp_container">
 								<label for="">Input OTP code</label>
 								<input type="text" id="otpCode" oninput="validateInput()">
 							</div>
-						</form>
 					</div>
 					<div class="pop-buttons">
-						<button id="sendEmailBtn" type="submit" name="btnReg" disabled>Submit</button><br/>
+						<button id="sendEmailBtn" type="submit" name="btnReg" style="background-color: grey;" disabled>Submit</button><br/>
 						<a href="login.php"><button style="color: #7066e0; background-color: transparent; font-weight: bold;"> Cancel</button></a>
 					</div>
 					</div>
@@ -358,6 +356,7 @@ require_once "inc/functions.php";
 
 	<script>
 		//Register Button
+
 		function toggleForm() {
 			var last = document.getElementById("signLast").value;
 			var first = document.getElementById("signFirst").value;
@@ -403,18 +402,18 @@ require_once "inc/functions.php";
 		}
 
 		function emailrequired() {
-			const emailbtn = document.getElementById("sendEmailBtn");
 			const email = document.getElementById("signEmail").value;
+			var submitButton = document.getElementById("registerButton");
 
 			// Check if the email contains '@' and '.', and is not empty
 			if (email !== "" && email.includes('@') && email.includes('.')) {
 				document.getElementById("signEmail").style.outline = "2px solid green";
-				emailbtn.disabled = false;
-				emailbtn.style.backgroundColor = "#7066e0";
+				submitButton.disabled = false;
+   				submitButton.style.backgroundColor = '#194f90';
 			} else {
 				document.getElementById("signEmail").style.outline = "2px solid red";
-				emailbtn.disabled = true;
-				emailbtn.style.backgroundColor = "grey";
+				submitButton.disabled = true;
+    			submitButton.style.backgroundColor = "#808080";
 			}
 		}
 
