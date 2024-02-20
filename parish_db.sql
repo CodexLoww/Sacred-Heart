@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 14, 2024 at 05:15 PM
+-- Generation Time: Feb 19, 2024 at 06:56 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -352,16 +352,20 @@ CREATE TABLE `tbl_finance` (
   `transaction_date` date NOT NULL,
   `transaction_type` varchar(255) NOT NULL,
   `description` varchar(255) NOT NULL,
-  `inputted_by` varchar(255) NOT NULL
+  `inputted_by` varchar(255) NOT NULL,
+  `amount` decimal(10,2) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `tbl_finance`
 --
 
-INSERT INTO `tbl_finance` (`id`, `transaction_date`, `transaction_type`, `description`, `inputted_by`) VALUES
-(12, '2024-02-15', 'wedding_payment', 'willing', 'moy'),
-(13, '2024-02-15', 'wedding_payment', 'walalang', 'ako');
+INSERT INTO `tbl_finance` (`id`, `transaction_date`, `transaction_type`, `description`, `inputted_by`, `amount`) VALUES
+(12, '2024-02-15', 'wedding_payment', 'willing', 'moy', NULL),
+(13, '2024-02-15', 'wedding_payment', 'walalang', 'ako', NULL),
+(14, '2023-10-11', 'wedding_payment', 'asdasd', 'admin', 10000.00),
+(15, '2024-10-11', 'expenses', 'aasddddd', 'admin', 20000.00),
+(16, '2024-01-30', 'baptismal', 'qweqw', 'admin', 10000.00);
 
 -- --------------------------------------------------------
 
@@ -441,7 +445,8 @@ INSERT INTO `tbl_user` (`user_id`, `last_name`, `first_name`, `middle_name`, `co
 (2, 'Gamasan', 'Jeff Ronald', '', '91293131338', 'jeffgamasan@gmail.com', 'admin', '$2y$10$n6gVkLJ6VZW8E44TWF53A.9F3wJXbfPwdmgDfVtn4X0hlCTza8F/G', 'Las Pinas', 'admin', 'verified'),
 (3, 'Super Admin', 'Supe Admin', NULL, '', '', 'super_admin', '$2y$10$WDBO4VKu0fvmj0OwuPzjYulCpjrZD.ZhvcOcPL9du7C2b4DfEr17e', '', 'super admin', ''),
 (7, 'Quinto', 'Jan Matthew', 'Ventura', '09693122647', 'quintom53@gmail.com', 'jam', '$2y$10$0jlMkxKhlgQJ8d2vLq/UMOpllq/NThSJEAcLIjlwFl8PbLeOtogfW', '021 Kaymito st. villa Cuana Pinagbuhatan pasig city', 'guest', NULL),
-(8, 'lati', 'edison', 'ventura', '09293929291', 'emailko@gmail.com', 'lati', '$2y$10$B5w0rOmtPM00i5LyF2vy5.RW0u1/H/Sysd8MRNJHecQuwMyhhW..2', 'latitagadito', 'guest', NULL);
+(8, 'lati', 'edison', 'ventura', '09293929291', 'emailko@gmail.com', 'lati', '$2y$10$B5w0rOmtPM00i5LyF2vy5.RW0u1/H/Sysd8MRNJHecQuwMyhhW..2', 'latitagadito', 'guest', NULL),
+(9, 'andres', 'mayton', '', '09760313281', 'kyleandres11@gmail.com', 'Kyle_andres', '$2y$10$OZ0X2kpXBcGJ9DKIBleyr.NG1t8GXLCtyWc9QLLkc91gllldAZvpu', '52 imperial street cubao Q.C', 'guest', NULL);
 
 -- --------------------------------------------------------
 
@@ -702,7 +707,7 @@ ALTER TABLE `tbl_event_archives`
 -- AUTO_INCREMENT for table `tbl_finance`
 --
 ALTER TABLE `tbl_finance`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `tbl_mass_intent`
@@ -720,7 +725,7 @@ ALTER TABLE `tbl_mass_intent_archive`
 -- AUTO_INCREMENT for table `tbl_user`
 --
 ALTER TABLE `tbl_user`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `tbl_wedding`
