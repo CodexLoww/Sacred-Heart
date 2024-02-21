@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 19, 2024 at 06:56 PM
--- Server version: 10.4.28-MariaDB
--- PHP Version: 8.2.4
+-- Generation Time: Feb 21, 2024 at 03:41 PM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -61,9 +61,8 @@ CREATE TABLE `tbl_baptismal` (
 --
 
 INSERT INTO `tbl_baptismal` (`baptismal_id`, `reservation_date`, `time_reservation`, `baptismal_name`, `baptismal_date`, `gender`, `date_of_birth`, `birth_place`, `father_name`, `father_birth_place`, `mother_name`, `mother_birth_place`, `baptismal_address`, `contact`, `type_of_marriage`, `or_number`, `fee`, `priest`, `status`, `username`, `remarks`, `upload`, `encode_by`, `date_encode`, `update_by`, `date_updated`) VALUES
-(7, '2024-01-24', '12:00', 'qdad', '2023-11-11', 'Male', '2023-02-02', 'adfafa', 'fdadfs', 'sfsfd', 'adsada', 'safdsafd', 'qerfd', '1321313131', 'Civil Wedding', '1231321', '2313322131', 'fddsf', 'approved', NULL, NULL, NULL, 'admin', '2024-01-19 22:00:47', NULL, NULL),
 (8, '2024-01-20', '10:00', 'dadf', '2023-11-11', 'Male', '2024-02-11', 'df', 'mkmm', 'mkm', 'mk', 'mkm', 'adfafd', '1313', 'Other Religion', '1231', '230303', 'adad', 'approved', 'kathleen', 'Walk-in Payment', NULL, NULL, NULL, NULL, NULL),
-(9, '2024-01-31', '16:11', 'cihoasdiojhas', '2024-01-31', 'Male', '2021-10-13', 'dacsaca', 'acadsdas', 'caasdc', 'ascasd', 'acsadcs', 'ascdasASC', '354534', 'Catholic Wedding', '23452345', '345345', 'cdsac', 'approved', 'isabel', 'Walk-in Payment', NULL, NULL, NULL, NULL, NULL),
+(9, '2024-01-31', '16:11', 'cihoasdiojhas', '2024-01-31', 'Male', '2021-10-13', 'dacsaca', 'acadsdas', 'caasdc', 'ascasd', 'acsadcs', 'ascdasASC', '354534', 'Catholic Wedding', '23452345', '345345', 'cdsac', 'approved', 'isabel', 'Walk-in Payment', NULL, NULL, '2024-02-21 20:42:03', NULL, NULL),
 (11, '2024-08-15', '16:49', 'asdasd', '2024-05-29', 'Male', '2024-06-05', 'dasasdasd', 'asdasdasd', 'dasdsa', 'asddasdas', 'adsdsa', 'dsaasdsad', '43243423', 'Catholic Wedding', '21342341', '12342314', 'asddasasd', 'pending', 'isabel', 'Walk-in Payment', NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
@@ -214,17 +213,25 @@ CREATE TABLE `tbl_church_expenses` (
   `encode_by` varchar(255) NOT NULL,
   `updated_by` varchar(255) NOT NULL,
   `date_encode` varchar(255) DEFAULT NULL,
-  `date_updated` varchar(255) DEFAULT NULL
+  `date_updated` varchar(255) DEFAULT NULL,
+  `type_of_transaction` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `tbl_church_expenses`
 --
 
-INSERT INTO `tbl_church_expenses` (`expenses_id`, `date_receipt`, `description`, `tin`, `expenses`, `encode_by`, `updated_by`, `date_encode`, `date_updated`) VALUES
-(3, '2023-11-21', 'adkddkaddlak', '012210310', '200', 'admin', '', '2023-11-21 22:35:26', NULL),
-(5, '2023-11-21', '', '19291919', '500', '', '', NULL, NULL),
-(7, '2023-11-21', '', '1231332', '2000', '', '', NULL, NULL);
+INSERT INTO `tbl_church_expenses` (`expenses_id`, `date_receipt`, `description`, `tin`, `expenses`, `encode_by`, `updated_by`, `date_encode`, `date_updated`, `type_of_transaction`) VALUES
+(3, '2023-11-21', 'adkddkaddlak', '012210310', '20000', 'admin', 'admin', '2023-11-21 22:35:26', '2024-02-21 20:28:23', 'utilities'),
+(5, '2023-11-21', '', '19291919', '500', '', 'admin', NULL, '2024-02-21 20:28:30', 'office_administration'),
+(7, '2023-11-21', '', '1231332', '2000', '', 'admin', NULL, '2024-02-21 20:27:13', 'maintenance'),
+(8, '2024-02-24', 'Event', '25963', '5000', 'super_admin', 'admin', '2024-02-21 00:15:41', '2024-02-21 20:27:06', 'salaries&wages'),
+(9, '2024-02-22', 'admin ito', '14559', '5000', 'admin', 'admin', '2024-02-21 00:17:50', '2024-02-21 20:26:26', 'salaries&wages'),
+(12, '2024-02-22', 'ret', '422', '454', 'admin', 'admin', '2024-02-21 11:25:04', '2024-02-21 20:26:20', 'others'),
+(14, '2024-04-04', 'gjkfgh', '1247', '12', 'admin', 'admin', '2024-02-21 11:57:30', '2024-02-21 20:26:14', 'maintenance'),
+(16, '2024-05-12', 'vczdf', '4352', '42123', 'admin', 'admin', '2024-02-21 12:06:01', '2024-02-21 20:26:09', 'office_administration'),
+(17, '2024-08-24', 'donation to', '1234', '12000', 'admin', 'admin', '2024-02-21 13:37:08', '2024-02-21 20:26:00', 'utilities'),
+(18, '2024-02-23', 'fads', '3645', '234', 'admin', '', '2024-02-21 20:42:03', NULL, 'maintenance');
 
 -- --------------------------------------------------------
 
@@ -247,7 +254,11 @@ CREATE TABLE `tbl_church_expense_archive` (
 --
 
 INSERT INTO `tbl_church_expense_archive` (`expenses_id_arch`, `date_receipt_arch`, `description_arch`, `tin_arch`, `expenses_arch`, `deleted_by`, `date_deleted`) VALUES
-(4, '2023-11-21', 'dadsasjak', '1019292919', '200', 'admin', '2023-12-25');
+(4, '2023-11-21', 'dadsasjak', '1019292919', '200', 'admin', '2023-12-25'),
+(5, '2024-02-24', '64hgd', '74', '756', 'admin', '2024-02-21'),
+(6, '2024-05-23', 'dasdasd', '1521', '15', 'admin', '2024-02-21'),
+(7, '2024-03-31', 'rasa', '1234', '10000', 'admin', '2024-02-21'),
+(8, '2024-10-02', 'Kasal', '14564', '100', 'admin', '2024-02-21');
 
 -- --------------------------------------------------------
 
@@ -273,7 +284,10 @@ CREATE TABLE `tbl_donate` (
 
 INSERT INTO `tbl_donate` (`donate_id`, `donate_name`, `donate_amount`, `donate_on`, `donate_description`, `encoded_by`, `date_encoded`, `date_updated`, `edited_by`) VALUES
 (4, 'Jeff Ronald Gamasan', '20000', '2023-11-22', '', NULL, NULL, NULL, NULL),
-(5, 'Joshua Abad', '10000', '2023-11-29', 'For School', NULL, NULL, NULL, NULL);
+(5, 'Joshua Abad', '10000', '2023-11-29', 'For School', NULL, NULL, NULL, NULL),
+(6, 'Lowee', '65820', '2024-03-22', 'Optic', 'admin', '2024-02-21 18:09:40', '2024-02-21 21:47:19', 'admin'),
+(7, 'Lowee', '1300', '2024-02-22', 'optional paren', 'admin', '2024-02-21 19:07:57', NULL, NULL),
+(8, 'Pogi', '20000', '2024-06-06', 'option', 'admin', '2024-02-21 22:38:06', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -319,7 +333,8 @@ CREATE TABLE `tbl_event` (
 
 INSERT INTO `tbl_event` (`event_id`, `event_title`, `event_name`, `event_description`, `event_start_time`, `date_entry`, `remarks_event`, `upload`, `username`, `encoded_by`, `date_encoded`, `edited_by`, `date_updated`) VALUES
 (1, 'Wedding', 'matt', 'wawawa', '13:00', '2024-02-04', 'Walk-in Registration', NULL, 'jam', NULL, NULL, NULL, NULL),
-(2, 'Baptismal', 'matt', 'wawawa', '13:00', '2024-02-05', 'Walk-in Registration', NULL, 'jam', NULL, NULL, NULL, NULL);
+(2, 'Baptismal', 'matt', 'wawawa', '13:00', '2024-02-05', 'Walk-in Registration', NULL, 'jam', NULL, NULL, NULL, NULL),
+(3, 'wedding', 'tjtyjtyj', 'tyjttt', '18:00', '2024-02-22', 'Walk-in Registration', NULL, 'admin', NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -671,19 +686,19 @@ ALTER TABLE `tbl_cert_request_archive`
 -- AUTO_INCREMENT for table `tbl_church_expenses`
 --
 ALTER TABLE `tbl_church_expenses`
-  MODIFY `expenses_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `expenses_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `tbl_church_expense_archive`
 --
 ALTER TABLE `tbl_church_expense_archive`
-  MODIFY `expenses_id_arch` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `expenses_id_arch` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `tbl_donate`
 --
 ALTER TABLE `tbl_donate`
-  MODIFY `donate_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `donate_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `tbl_donate_archives`
@@ -695,7 +710,7 @@ ALTER TABLE `tbl_donate_archives`
 -- AUTO_INCREMENT for table `tbl_event`
 --
 ALTER TABLE `tbl_event`
-  MODIFY `event_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `event_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `tbl_event_archives`
