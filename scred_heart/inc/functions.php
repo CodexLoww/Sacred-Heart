@@ -637,6 +637,7 @@ $data .="
 <td>".$ctr."</td>
 <td>".$formatDateStartTime."</td>
 <td>".$row_churchexp['description']."</td>
+<td>".$row_church['type_of_transaction']."></td>
 <td>".$row_churchexp['tin']."</td>
 <td>".$row_churchexp['expenses']."</td>
 <td>".$row_churchexp['encode_by']."</td>
@@ -2001,13 +2002,14 @@ if (isset($_POST["btnChurchAddExpense"])) {
 $church_add_date = $conn->escape_string(trim($_POST["church_add_date"]));
 $church_add_currency = $conn->escape_string(trim($_POST["church_add_currency"]));
 $church_add_tin = $conn->escape_string(trim($_POST["church_add_tin"]));
-$church_add_desc = $conn->escape_string(trim($_POST["church_add_desc"]));
+$church_add_trans_type  = $conn->escape_string(trim($_POST["church_add_type_of_transaction"])); // transaction type
+$church_add_desc = $conn->escape_string(trim($_POST["church_add_desc"]) ? $_POST["church_add_desc"] : '');
 
 // NOW() function in sql directly add date now without parameters
 
-$sql_add_church = "INSERT INTO tbl_church_expenses(date_receipt,description,tin,expenses,encode_by,date_encode) VALUES(?,?,?,?,?,NOW())";
+$sql_add_church = "INSERT INTO tbl_church_expenses(date_receipt, description, type_of_transaction, tin, expenses, encode_by, date_encode) VALUES (?, ?, ?, ?, ?, ?, NOW())";
 $stmt_add_church = $conn->prepare($sql_add_church) or die($conn->error);
-$stmt_add_church->bind_param("sssss", $church_add_date, $church_add_desc,$church_add_tin,$church_add_currency,$_SESSION["username"]);
+$stmt_add_church->bind_param("ssssss", $church_add_date, $church_add_desc, $church_add_trans_type, $church_add_tin, $church_add_currency, $_SESSION["username"]);
 $stmt_add_church->execute();
 $stmt_add_church->close();
 header("location: church-expenses");
@@ -2022,11 +2024,12 @@ $church_update_date = $conn->escape_string(trim($_POST["church_update_date"]));
 $church_update_expense = $conn->escape_string(trim($_POST["church_update_expense"]));
 $church_update_tin = $conn->escape_string(trim($_POST["church_update_tin"]));
 $church_update_desc = $conn->escape_string(trim($_POST["church_update_desc"]));
+$church_update_trans_type = $conn->escape_string(trim($_POST["church_update_type_of_transaction"])); // update transaction type
 
 if ($church_edit != "") {
-	$sql_update_churchexp = "UPDATE tbl_church_expenses SET date_receipt=?, description=?, tin=?, expenses=?, updated_by=?, date_updated=NOW() WHERE expenses_id=?";
+	$sql_update_churchexp = "UPDATE tbl_church_expenses SET date_receipt=?, description=?, tin=?, expenses=?, type_of_transaction=?, updated_by=?, date_updated=NOW() WHERE expenses_id=?";
 	$stmt_update_churchexp = $conn->prepare($sql_update_churchexp) or die($conn->error);
-	$stmt_update_churchexp->bind_param("sssssi",$church_update_date,$church_update_desc,$church_update_tin,$church_update_expense,$_SESSION["username"],$church_edit);
+	$stmt_update_churchexp->bind_param("ssssssi", $church_update_date, $church_update_desc, $church_update_tin, $church_update_expense, $church_update_trans_type, $_SESSION["username"], $church_edit);
 	$stmt_update_churchexp->execute();
 	$stmt_update_churchexp->close();
 	header("location: church-expenses");		
@@ -2070,6 +2073,7 @@ $data .="
 <tr class='text-center'>
 <th>No.</th>
 <th>Date Receipt</th>
+<th>Type of Transaction</th>
 <th>Description</th>
 <th>Amount</th>
 <th>TIN #</th>
@@ -2095,6 +2099,7 @@ $data .="
 <tr class='text-center'>
 <td>".$ctr."</td>
 <td>".$formatDate."</td>
+<td>".$row_church['type_of_transaction']."</td>
 <td>".$row_church['description']."</td>
 <td>".$row_church['expenses']."</td>
 <td>".$row_church['tin']."</td>
@@ -2150,6 +2155,7 @@ $output .="
 <tr class='text-center'>
 <th>No.</th>
 <th>Date Receipt</th>
+<th>Type of Transaction</th>
 <th>Description</th>
 <th>Amount</th>
 <th>TIN #</th>
@@ -2174,6 +2180,7 @@ $output .="
 <tr class='text-center'>
 <td>".$ctr."</td>
 <td>".$formatDate."</td>
+<td>".$row_church['type_of_transaction']."</td>
 <td>".$row_church['description']."</td>
 <td>".$row_church['expenses']."</td>
 <td>".$row_church['tin']."</td>

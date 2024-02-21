@@ -247,7 +247,7 @@
 
 <div class="col-md-12 mb-3">
 <label>Description:</label>
-<textarea class="form-control" name="add_description" rows="6" placeholder="OPtional"></textarea>
+<textarea class="form-control" name="add_description" rows="6" placeholder="Optional"></textarea>
 </div>
 
 <div class="col-md-12 mb-3 text-end">
@@ -309,7 +309,7 @@
 
 <div class="col-md-12 mb-3">
 <label>Description:</label>
-<textarea class="form-control" id="update_donate_desc" name="update_description" rows="6" placeholder="OPtional"></textarea>
+<textarea class="form-control" id="update_donate_desc" name="update_description" rows="6" placeholder="Optional"></textarea>
 </div>
 
 <div class="col-md-12 mb-3 text-end">
@@ -409,6 +409,17 @@ $peso_sign = "\xE2\x82\xB1";
 	</div>
 </div>
 
+<div class="mb-3">
+            <label for="type_of_transaction" class="form-label">Type of Transaction</label>
+            <select class="form-select" id="type_of_transaction" name="church_add_type_of_transaction" required>
+              <option value="utilities">Utilities</option>
+              <option value="maintenance">Maintenance</option>
+              <option value="office_administration">Office Administration</option>
+              <option value="salaries&wages">Salaries and Wages</option>
+			  <option value="others">Others</option>
+            </select>
+</div>
+
 <div class="col-md-12 mb-3">
 	<label>Description</label>
 	<textarea class="form-control" name="church_add_desc" rows="6" placeholder="Optional"></textarea>
@@ -470,6 +481,17 @@ $peso_sign = "\xE2\x82\xB1";
 		<span class="input-group-text"><i class="fa-solid fa-hashtag"></i></span>
 		<input type="number" min="0" id="church_update_tin" name="church_update_tin" class="form-control" pattern="^\d+(\d{1,9})?$" required="">
 	</div>
+</div>
+
+<div class="mb-3">
+            <label for="type_of_transaction" class="form-label">Type of Transaction</label>
+            <select class="form-select" id="type_of_transaction" name="church_update_type_of_transaction" required>
+				<option value="utilities">Utilities</option>
+              	<option value="maintenance">Maintenance</option>
+              	<option value="office_administration">Office Administration</option>
+              	<option value="salaries&wages">Salaries and Wages</option>
+			  	<option value="others">Others</option>
+            </select>
 </div>
 
 <div class="col-md-12 mb-3">

@@ -93,7 +93,8 @@ require_once "modal/modal.php";
 	<tr class="text-center">
 		<th>No.</th>
 		<th>Date Receipt</th>
-		<th>Description</th>
+		<th>Type of Transaction</th>
+		<th>Description</th> 
 		<th>Amount</th>
 		<th>TIN #</th>
 		<th>Action</th>
@@ -101,7 +102,7 @@ require_once "modal/modal.php";
 </thead>
 
 <?php
-	$ctr = 1;
+	// $ctr = 1;
 	$peso_sign = "\xE2\x82\xB1";
 	$total_amount = 0;
 	while ($row_church = $church_tbl_list->fetch_assoc()) {
@@ -112,8 +113,10 @@ require_once "modal/modal.php";
 ?>
 <tbody>
 <tr class="text-center">
-	<td><?= $ctr; ?></td>
+	<!-- <td><?= $ctr; ?></td> -->
+	<td><?= $row_church["expenses_id"]; ?></td>
 	<td><?= $formatDate; ?></td>
+	<td><?= $row_church["type_of_transaction"]; ?></td> 
 	<td><?= $row_church["description"]; ?></td>
 	<td><?= $row_church["expenses"]; ?></td>
 	<td><?= $row_church["tin"]; ?></td>
@@ -122,7 +125,7 @@ require_once "modal/modal.php";
 	</td>
 </tr>
 <?php
-		$ctr++;
+		// $ctr++;
 	}
 ?>
 <tr>

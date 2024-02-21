@@ -95,6 +95,7 @@ require_once "modal/updatePassModal.php";
 <tr class="text-center">
 <th>No.</th>
 <th>Date Receipt</th>
+<th>Type of Transaction</th>
 <th>Description</th>
 <th>TIN</th>
 <th>Expenses</th>
@@ -128,8 +129,10 @@ $total_amount += $row_expenses["expenses"]; //accumulate or adding all amount on
 ?>
 
 <tr class="text-center">
-<td><?= $ctr; ?></td>
+<!-- <td><?= $ctr; ?></td> -->
+<td><?= $row_expenses["expenses_id"]; ?></td>
 <td><?= $formatDateStartTime; ?></td>
+<td><?= $row_expenses["type_of_transaction"]; ?></td>
 <td><?= $row_expenses["description"]; ?></td>
 <td><?= $row_expenses["tin"]; ?></td>
 <td><?= $peso_sign.number_format($row_expenses["expenses"]); ?></td>
@@ -139,7 +142,7 @@ $total_amount += $row_expenses["expenses"]; //accumulate or adding all amount on
 <td><?= $dateUpdate ?></td>
 </tr>
 <?php 
-	$ctr++;
+	// $ctr++;
 	}
 ?>
 <tr>
